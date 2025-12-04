@@ -70,7 +70,7 @@ class Order(models.Model):
         ordering = ["-created_at"]  # newest first
 
     def __str__(self) -> str:
-        return f"<Order: {self.created_at}>"
+        return f"{self.created_at}"
 
 
 class Ticket(models.Model):
@@ -86,7 +86,7 @@ class Ticket(models.Model):
     def __str__(self) -> str:
         # <Ticket: Speed 2020-11-11 09:30:00 (row: 6, seat: 12)>
         return (
-            f"<Ticket: {self.movie_session.movie.title} "
+            f"{self.movie_session.movie.title} "
             f"{self.movie_session.show_time} "
             f"(row: {self.row}, seat: {self.seat})>"
         )

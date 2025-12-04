@@ -6,37 +6,40 @@ from django.shortcuts import get_object_or_404
 from db.models import Order, User, MovieSession, Ticket
 
 
-@transaction.atomic
-def create_order(tickets: list[dict]) -> Order:
-    if not tickets:
-        raise ValueError("tickets list cannot be empty")
+from django.db import transaction
+from django.utils import timezone
+from django.shortcuts import get_object_or_404
 
-    username = tickets[0].get("username")
+from db.models import User, Order, Ticket, MovieSession
+
+
+@transaction.atomic
+def create_order(
+    tickets: list[dict],
+    username: str,
+    date: str | None = None
+) -> Order:
+
     user = get_object_or_404(User, username=username)
 
-    provided_date = tickets[0].get("date")
+    created_at = date if date is not None else timezone.now()
 
-    # створення order всередині atomic
     order = Order.objects.create(
         user=user,
-        created_at=provided_date if provided_date else timezone.now()
+        created_at=created_at
     )
 
-    # створення квитків всередині atomic
-    for ticket_data in tickets:
-        movie_session = get_object_or_404(
-            MovieSession,
-            id=ticket_data["movie_session"]
-        )
+    for t in tickets:
+        movie_session = get_object_or_404(MovieSession, id=t["movie_session"])
 
         ticket = Ticket(
             movie_session=movie_session,
             order=order,
-            row=ticket_data["row"],
-            seat=ticket_data["seat"]
+            row=t["row"],
+            seat=t["seat"],
         )
 
-        ticket.full_clean()   # перевірка row/seat
+        ticket.full_clean()
         ticket.save()
 
     return order
