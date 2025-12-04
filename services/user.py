@@ -8,8 +8,8 @@ def create_user(
         password: str,
         email: str = None,
         first_name: str = None,
-        last_name: str = None):
-    User.objects.create_user_with_optional(username,
+        last_name: str = None) -> User:
+    return User.objects.create_user_with_optional(username,
                                            password,
                                            email,
                                            first_name,
