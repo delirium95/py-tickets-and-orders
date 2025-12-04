@@ -9,11 +9,13 @@ def create_user(
         email: str = None,
         first_name: str = None,
         last_name: str = None) -> User:
-    return User.objects.create_user_with_optional(username,
-                                           password,
-                                           email,
-                                           first_name,
-                                           last_name)
+    return User.objects.create_user_with_optional(
+        username=username,
+        password=password,
+        email=email,
+        first_name=first_name,
+        last_name=last_name,
+    )
 
 
 def get_user(user_id: int) -> User:
