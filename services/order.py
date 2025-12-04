@@ -28,7 +28,8 @@ def create_order(
     )
 
     for _ticket in tickets:
-        movie_session = get_object_or_404(MovieSession, id=_ticket["movie_session"])
+        movie_session = get_object_or_404(
+            MovieSession, id=_ticket["movie_session"])
 
         ticket = Ticket(
             movie_session=movie_session,
