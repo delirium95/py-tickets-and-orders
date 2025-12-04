@@ -2,6 +2,11 @@ from __future__ import annotations
 
 from django.contrib.auth.models import UserManager
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from db.models import User
+
 
 class CustomUserManager(UserManager):
 
