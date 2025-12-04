@@ -1,6 +1,6 @@
-from django.contrib.auth.models import UserManager
+from __future__ import annotations
 
-from db.models import User
+from django.contrib.auth.models import UserManager
 
 
 class CustomUserManager(UserManager):
@@ -12,7 +12,7 @@ class CustomUserManager(UserManager):
         email: str = None,
         first_name: str = None,
         last_name: str = None,
-    ) -> User:
+    ) -> "User":
         # Використовуємо базовий create_user — він хешує пароль
         user = self.create_user(username=username, password=password)
 
