@@ -27,14 +27,14 @@ def create_order(
         created_at=created_at
     )
 
-    for t in tickets:
-        movie_session = get_object_or_404(MovieSession, id=t["movie_session"])
+    for _ticket in tickets:
+        movie_session = get_object_or_404(MovieSession, id=_ticket["movie_session"])
 
         ticket = Ticket(
             movie_session=movie_session,
             order=order,
-            row=t["row"],
-            seat=t["seat"],
+            row=_ticket["row"],
+            seat=_ticket["seat"],
         )
 
         ticket.full_clean()
