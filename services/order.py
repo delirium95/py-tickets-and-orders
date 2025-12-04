@@ -3,7 +3,6 @@ from datetime import datetime
 from django.db import transaction
 from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404
-from django.utils import timezone
 
 from db.models import User, Order, Ticket, MovieSession
 
@@ -17,16 +16,15 @@ def create_order(
 
     user = get_object_or_404(User, username=username)
 
+    # 1) створюємо order (created_at = now() через auto_now_add)
+    order = Order.objects.create(user=user)
+
+    # 2) якщо дата передана → перезаписуємо created_at і зберігаємо
     if date is not None:
-        created_at = datetime.strptime(date, "%Y-%m-%d %H:%M")
-    else:
-        created_at = timezone.now()
+        order.created_at = datetime.strptime(date, "%Y-%m-%d %H:%M")
+        order.save(update_fields=["created_at"])
 
-    order = Order.objects.create(
-        user=user,
-        created_at=created_at
-    )
-
+    # 3) створюємо tickets
     for _ticket in tickets:
         movie_session = get_object_or_404(
             MovieSession, id=_ticket["movie_session"])
@@ -37,7 +35,6 @@ def create_order(
             row=_ticket["row"],
             seat=_ticket["seat"],
         )
-
         ticket.full_clean()
         ticket.save()
 
