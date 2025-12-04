@@ -69,7 +69,7 @@ class Order(models.Model):
     class Meta:
         ordering = ["-created_at"]  # newest first
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"<Order: {self.created_at}>"
 
 
@@ -83,7 +83,7 @@ class Ticket(models.Model):
     row = models.IntegerField()
     seat = models.IntegerField()
 
-    def __str__(self):
+    def __str__(self) -> str:
         # <Ticket: Speed 2020-11-11 09:30:00 (row: 6, seat: 12)>
         return (
             f"<Ticket: {self.movie_session.movie.title} "
@@ -91,19 +91,19 @@ class Ticket(models.Model):
             f"(row: {self.row}, seat: {self.seat})>"
         )
 
-    def clean(self):
+    def clean(self) -> None:
         hall = self.movie_session.cinema_hall
 
         errors = {}
 
         if not (1 <= self.row <= hall.rows):
-            errors['row'] = [
+            errors["row"] = [
                 f"row number must be in "
                 f"available range: (1, rows): (1, {hall.rows})"
             ]
 
         if not (1 <= self.seat <= hall.seats_in_row):
-            errors['seat'] = [
+            errors["seat"] = [
                 f"seat number must be in available range: "
                 f"(1, seats_in_row): (1, {hall.seats_in_row})"
             ]
@@ -119,6 +119,6 @@ class Ticket(models.Model):
             )
         ]
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
         self.full_clean()  # ensures clean() is called
         return super().save(*args, **kwargs)
